@@ -11,7 +11,7 @@ import pywhatkit
 import wikipedia
 
 listener = sr.Recognizer()
-
+#Define our engine bot with women voice
 engine = pyttsx3.init()
 voices =engine.getProperty("voices")
 engine.setProperty('voice', voices[1].id)
@@ -23,12 +23,27 @@ def engine_talk(text):
 
 
 def weather(city):
+    #using an API to get the weather
     api_key = "50b1bdc5ae822a743f7443fa0a9c6a1d"
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
     city_name = city
+    #get the url and our api
+    #with &q it will get the city weather
     complete_url = base_url + "appid=" + api_key + "&q=" + city_name
+
+    # get method of requests module
+    # return response object
     response = requests.get(complete_url)
+
+    # json method of response object
+    # convert json format data into
+    # python format data
     x = response.json()
+
+    # Now x contains list of nested dictionaries
+    # Check the value of "cod" key is equal to
+    # "404", means city is found otherwise,
+    # city is not found
     if x["cod"] != "404":
         y = x["main"]
         current_temperature = y["temp"]
@@ -40,7 +55,7 @@ def weather(city):
     else:
         print(" City Not Found ")
 
-
+#with user_command our user use microphone to talk with engine
 def user_commands():
     try:
         with sr.Microphone() as source:
@@ -63,11 +78,11 @@ def run_alexa():
         song = command.replace('play', '')
         #print('Your New command is:' +command)
         #print('the bot is telling us: playing' +command)
-        engine_talk('Playing' +song)
+        engine_talk('Playing' + song)
         pywhatkit.playonyt(song)
     elif 'time' in command:
        time = datetime.datetime.now().strftime('%I:%M %p')
-       engine_talk('The Current time is' +time)
+       engine_talk('The Current time is' + time)
     elif 'who is' in command:
        name = command.replace('who is', '')
        info = wikipedia.summary(name)
